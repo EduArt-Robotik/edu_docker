@@ -1,0 +1,19 @@
+version: "2.4"
+
+services:
+    rplidar:
+        image: eduartrobotik/dds-bridge:1.0.0
+        container_name: dds-bridge-1.0.0
+        user: user
+        restart: always
+        privileged: true
+        ipc: host
+        pid: host
+        mem_limit: 300mb
+        ports:
+            - "7400-7401"
+            - "7410-7411"
+
+networks:
+    proxy-redirect:
+        external: true
