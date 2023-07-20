@@ -18,6 +18,8 @@ RUN \
     git \
     build-essential \
     sudo \
+    && add-apt-repository universe \
+    && apt-get update \
 ########################################################
 # Install ROS
 ## Get package archive key and ROS source list entry.
