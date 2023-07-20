@@ -3,7 +3,7 @@ version: "3.0"
 services:
     rplidar:
         image: eduartrobotik/rpliadr:1.0.0
-        container_name: rpliadr:1.0.0
+        container_name: rpliadr-1.0.0
         user: root
         restart: always
         privileged: true
