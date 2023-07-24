@@ -13,8 +13,8 @@ services:
         networks:
             - proxy-redirect          
         ports:
-            - "7400-7401:7400-7401"
-            - "7410-7411:7410-7411"
+            - "7400-7401:7400-7401/udp"
+            - "7410-7411:7410-7411/udp"
 
 networks:
     proxy-redirect:
