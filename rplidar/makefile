@@ -7,10 +7,14 @@ build-multiarch-and-push:
 	docker buildx build --platform linux/amd64,linux/arm64/v8 -t eduartrobotik/$(image_name) --push .
 
 install-udev-rules:
-	sudo rplidar_ros2/scripts/create_udev_rules.sh
+	sudo cp rplidar.rules /etc/udev/rules.d
+	sudo service udev reload
+	sudo service udev restart
 
 remove-udev-rules:
-	sudo rplidar_ros2/scripts/delete_udev_rules.sh
+	sudo rm /etc/udev/rules.d/rplidar.rules
+	sudo service udev reload
+	sudo service udev restart
 
 clean:
 	rm -rf rplidar_ros2

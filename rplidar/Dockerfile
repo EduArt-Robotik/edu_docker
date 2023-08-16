@@ -9,6 +9,8 @@ USER $USER
 # set up ros workspace
 RUN mkdir -p /home/$USER/ros/src/
 COPY ./rplidar_ros2 /home/$USER/ros/src/rplidar_ros2
+COPY ./iot_cyclone_dds_profile.xml /home/$USER/
+ENV CYCLONEDDS_URI=/home/$USER/iot_cyclone_dds_profile.xml
 WORKDIR /home/$USER/ros
 
 # build rplidar package
