@@ -1,9 +1,11 @@
 FROM eduartrobotik/eduart-robot:0.3.0
 
-WORKDIR /home/user
+ENV USER user
+WORKDIR /home/$USER
+USER $USER
 
 RUN echo "Installing Node Red" \
-    cd /home/user \
+    cd /home/$USER \
     && wget https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh \
     && chmod u+x install.sh \
     && ./install.sh \
@@ -12,4 +14,6 @@ RUN echo "Installing Node Red" \
     && nvm install node \
     && npm install -g --unsafe-perm node-red
 
-CMD node-red
+COPY launch-nodered.sh /home/$USER/
+
+CMD ["bash", "launch-nodered.sh"]
