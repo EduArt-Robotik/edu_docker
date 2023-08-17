@@ -18,6 +18,9 @@ RUN \
     git \
     build-essential \
     sudo \
+    iproute2 \
+    net-tools \
+    wget \
     && add-apt-repository universe \
     && apt-get update \
 ########################################################
