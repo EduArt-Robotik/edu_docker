@@ -1,0 +1,14 @@
+version: "3.0"
+
+services:
+    edu-web-joy:
+        image: eduartrobotik/eduard-web-joy:0.2.0
+        container_name: eduard-web-joy-0.2.0
+        restart: on-failure
+        privileged: true
+        ipc: host
+        pid: host
+        mem_limit: 150mb
+        environment:
+            - EDU_ROBOT_NAMESPACE=eduard
+        network_mode: host
