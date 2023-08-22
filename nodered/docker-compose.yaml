@@ -1,10 +1,10 @@
-version: "2.4"
+version: "3.0"
 
 services:
     nodered:
         image: eduartrobotik/eduart-nodered:0.1.0
         container_name: eduart-nodered-0.1.0
-        user: user
+        user: root
         restart: always
         privileged: true
         ipc: host
