@@ -4,6 +4,7 @@ services:
     edu-web-joy:
         image: eduartrobotik/eduard-web-joy:0.2.2
         container_name: eduard-web-joy-0.2.2
+        user: root
         restart: on-failure
         privileged: true
         ipc: host
