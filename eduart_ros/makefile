@@ -1,4 +1,4 @@
-image_name = eduart-ros-base:humble-1.2.0
+image_name = eduart-ros-base:humble-1.2.1
 
 build-docker:
 	docker build -t $(image_name) .

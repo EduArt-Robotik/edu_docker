@@ -39,7 +39,8 @@ RUN \
     ros-$ROS_DISTRO-fastrtps \
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-joy \
-    ros-$ROS_DISTRO-joy-linux
+    ros-$ROS_DISTRO-joy-linux \
+    ros-$ROS_DISTRO-diagnostic-aggregator
 
 # write source commands to .bashrc -> no need to source afterwards
 RUN \
@@ -53,7 +54,7 @@ RUN \
     && echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> /home/$USER/.bashrc \
     && echo "export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$USER/fastrtps_profile.xml" >> /home/$USER/.bashrc \
     # && echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> /home/$USER/.bashrc \    
-    # && echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USER/.bashrc \
+    && echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USER/.bashrc \
     && echo "source /home/$USER/ros/install/setup.bash" >> /home/$USER/.bashrc \
 ########################################################
 # Clean up
