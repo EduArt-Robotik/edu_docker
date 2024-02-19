@@ -23,13 +23,13 @@ def generate_launch_description():
 
     start_sync_slam_toolbox_node = Node(
         parameters=[
-          slam_params_file,
+          './slam.yaml',
           {'use_sim_time': use_sim_time}
         ],
         package='slam_toolbox',
         executable='sync_slam_toolbox_node',
         name='slam_toolbox',
-        remapping=[('/map', '/eduard/blue/map')],
+        remappings=[('/map', '/eduard/blue/map')],
         output='screen'
       )
 
