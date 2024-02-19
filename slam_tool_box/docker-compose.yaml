@@ -3,7 +3,7 @@ version: "3.0"
 services:
     rplidar:
         image: eduartrobotik/nav2:1.0.0
-        container_name: nav2-1.0.0
+        container_name: slam-tool-box-1.0.0
         user: root
         restart: always
         privileged: true
@@ -17,7 +17,7 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch slam.launch.py'
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'
             
