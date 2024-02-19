@@ -1,7 +1,7 @@
 version: "3.0"
 
 services:
-    rplidar:
+    nav2:
         image: eduartrobotik/nav2:1.0.0
         container_name: nav2-1.0.0
         user: root
