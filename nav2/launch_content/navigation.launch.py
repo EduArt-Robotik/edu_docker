@@ -19,7 +19,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration, PythonExpression, EnvironmentVariable
 from launch_ros.actions import LoadComposableNodes
 from launch_ros.actions import Node
 from launch_ros.descriptions import ComposableNode, ParameterFile
@@ -29,6 +29,14 @@ from nav2_common.launch import RewrittenYaml
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav2_bringup')
+    robot_namespace = os.environ['EDU_ROBOT_NAMESPACE']
+    if len(robot_namespace) == 0: robot_namespace = '/eduard/'
+    if robot_namespace[0] != '/': robot_namespace = '/' + robot_namespace
+    if robot_namespace[len(robot_namespace) - 1] != '/': robot_namespace += '/'
+    tf_prefix = robot_namespace[1:] if robot_namespace[0] == '/' else robot_namespace
+
+    print('use robot namespace = ', robot_namespace)
+    print('use tf prefix = ', tf_prefix)
 
     namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -57,17 +65,26 @@ def generate_launch_description():
     #              https://github.com/ros2/launch_ros/issues/56
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static'),
-                  ('/map', '/eduard/blue/map')]
+                  ('/map', robot_namespace + 'map')]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
-        'autostart': autostart}
+        'autostart': autostart,
+        'base_frame_id': tf_prefix + 'base_footprint',
+        'global_frame_id': tf_prefix + 'map',
+        'odom_frame_id': tf_prefix + 'odom',
+        'scan_topic': robot_namespace + 'scan',
+        'global_frame': tf_prefix + 'map',
+        'robot_base_frame': tf_prefix + 'base_link',
+        'odom_topic': robot_namespace + 'odometry',
+        'topic': robot_namespace + 'scan'
+    }
 
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
-            root_key=namespace,
+            root_key='',
             param_rewrites=param_substitutions,
             convert_types=True),
         allow_substs=True)
@@ -121,7 +138,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings + [('cmd_vel', '/eduard/blue/autonomous/cmd_vel')]),
+                remappings=remappings + [('cmd_vel', robot_namespace + 'autonomous/nav2_cmd_vel')]),
             Node(
                 package='nav2_smoother',
                 executable='smoother_server',

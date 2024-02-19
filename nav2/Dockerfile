@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-ros-base:humble-1.2.1
+FROM eduartrobotik/eduart-swarm:0.2.1
 
 ENV ROS_DISTRO humble
 ENV USER user
@@ -15,11 +15,12 @@ RUN echo "installing nav2 and slam packages" \
 
 USER $USER
 
+#git@github.com:schmiddey/wombat_nav2_pack.git
+
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/
 RUN sudo chmod a+x /home/$USER/entrypoint
 ENTRYPOINT [ "/home/user/entrypoint" ]
 
 # launch rplidar node
-CMD echo "launching rplidar control software" \
-    && ros2 launch rplidar_ros rplidar.launch.py
+CMD echo "launching rplidar control software"

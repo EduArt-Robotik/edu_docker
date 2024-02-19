@@ -17,7 +17,7 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py & ros2 launch twist_accumulator.launch.py'
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'
             
