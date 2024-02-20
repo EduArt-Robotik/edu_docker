@@ -84,7 +84,7 @@ def generate_launch_description():
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
-            root_key='',
+            root_key=namespace,
             param_rewrites=param_substitutions,
             convert_types=True),
         allow_substs=True)
@@ -94,7 +94,7 @@ def generate_launch_description():
 
     declare_namespace_cmd = DeclareLaunchArgument(
         'namespace',
-        default_value='',
+        default_value=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
         description='Top-level namespace')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -138,7 +138,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings + [('cmd_vel', robot_namespace + 'autonomous/nav2_cmd_vel')]),
+                remappings=remappings + [('cmd_vel', robot_namespace + 'autonomous/nav2_cmd_vel')],
+                namespace=namespace),
             Node(
                 package='nav2_smoother',
                 executable='smoother_server',
@@ -148,7 +149,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings,
+                namespace=namespace),              
             Node(
                 package='nav2_planner',
                 executable='planner_server',
@@ -158,7 +160,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings,
+                namespace=namespace),              
             Node(
                 package='nav2_behaviors',
                 executable='behavior_server',
@@ -168,7 +171,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings,
+                namespace=namespace),
             Node(
                 package='nav2_bt_navigator',
                 executable='bt_navigator',
@@ -178,7 +182,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings,
+                namespace=namespace),              
             Node(
                 package='nav2_waypoint_follower',
                 executable='waypoint_follower',
@@ -188,7 +193,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings,
+                namespace=namespace),                
             Node(
                 package='nav2_velocity_smoother',
                 executable='velocity_smoother',
@@ -199,7 +205,8 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings +
-                        [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
+                        [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')],
+                namespace=namespace),            
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
@@ -208,7 +215,8 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 parameters=[{'use_sim_time': use_sim_time},
                             {'autostart': autostart},
-                            {'node_names': lifecycle_nodes}]),
+                            {'node_names': lifecycle_nodes}],
+                namespace=namespace),                               
         ]
     )
 

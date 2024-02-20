@@ -40,7 +40,7 @@ def generate_launch_description():
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file='./slam.yaml',
-            root_key='',
+            root_key=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
             param_rewrites=param_substitutions,
             convert_types=True),
         allow_substs=True)
@@ -53,7 +53,7 @@ def generate_launch_description():
         package='slam_toolbox',
         executable='sync_slam_toolbox_node',
         name='slam_toolbox',
-        namespace=robot_namespace,
+        namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
         remappings=[('/map', robot_namespace + 'map')],
         output='screen'
       )

@@ -4,7 +4,7 @@ services:
     nav2:
         image: eduartrobotik/nav2:1.0.0
         container_name: nav2-1.0.0
-        user: root
+        user: user
         restart: always
         privileged: true
         ipc: host
@@ -15,9 +15,8 @@ services:
         network_mode: "host"
         devices:
             - '/dev:/dev'
-        group_add:
-            - dialout
         command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py & ros2 launch twist_accumulator.launch.py'
+        # command: bash -c 'cd /home/user/ros/launch_content; ros2 launch twist_accumulator.launch.py'        
+        # command: tail -F anything
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'
-            

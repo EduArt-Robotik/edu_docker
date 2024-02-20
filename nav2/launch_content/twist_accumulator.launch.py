@@ -5,7 +5,7 @@ from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, EnvironmentVariable
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, EnvironmentVariable, FindExecutable
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -36,9 +36,10 @@ def generate_launch_description():
 
     null_cmd_vel_pub = ExecuteProcess(
         cmd=['ros2', 'topic', 'pub', '-r 20', robot_namespace + 'autonomous/null_cmd_vel', 'geometry_msgs/msg/Twist', ""],
-        name='null_cmd_vel_pub',  # this is optional
-        output='both',
-    ),
+        name='null_cmd_vel_pub',
+        shell=True,
+        output='both'
+    )
 
     return LaunchDescription([
       twist_accumulator,
