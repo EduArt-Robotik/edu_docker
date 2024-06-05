@@ -20,6 +20,7 @@ def generate_launch_description():
       ]),
       launch_arguments={
         'serial_port' : '/dev/ttyUSB0', # actually it should be /dev/rplidar, but then a error code will be rise by the driver...
+        'frame_id' : PathJoinSubstitution([robot_namespace, 'laser'])
         # 'serial_baudrate' : '115200'
       }.items()
     )
