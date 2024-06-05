@@ -1,26 +1,29 @@
 from launch import LaunchDescription
+
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+
 from launch.substitutions import Command, EnvironmentVariable, PathJoinSubstitution
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     robot_namespace = EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
 
-    rplidar_node = Node(
-        name='rplidar_composition',
-        package='rplidar_ros',
-        executable='rplidar_composition',
-        output='screen',
-        parameters=[{
-            'serial_port': '/dev/ttyUSB0',
-            'serial_baudrate': 115200,  # A1 / A2
-            # 'serial_baudrate': 256000, # A3
-            'frame_id': PathJoinSubstitution([robot_namespace, 'laser']),
-            'inverted': False,
-            'angle_compensate': True,
-            'topic_name': 'scan'
-        }],
-        namespace=robot_namespace
+    rplidar_node = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource([
+        PathJoinSubstitution([
+          FindPackageShare('rplidar_ros'),
+          'launch',
+          'rplidar_a2m8_launch.py'
+        ])
+      ]),
+      launch_arguments={
+        'serial_port' : '/dev/rplidar',
+        'serial_baudrate' : '115200'
+      }
     )
+
     tf_laser = Node(
       package='tf2_ros',
       executable='static_transform_publisher',
