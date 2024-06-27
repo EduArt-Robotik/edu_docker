@@ -1,0 +1,2 @@
+# udev rule for YDLidar sensors
+SUBSYSTEM=="tty", ENV{ID_PATH}=="pci-0000:05:00.3-usb-0:3.2:1.0", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE:="0666", SYMLINK+="ydlidar_left"

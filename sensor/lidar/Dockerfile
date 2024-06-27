@@ -6,10 +6,22 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 USER $USER
 
+# install SDK for YDLidar
+RUN echo "installing ydlidar sdk" \
+    && cd /home/$USER/ \
+    && git clone https://github.com/YDLIDAR/YDLidar-SDK.git \
+    && cd YDLidar-SDK \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && sudo make install
+
 # set up ros workspace
 RUN mkdir -p /home/$USER/ros/src/
 COPY ./rplidar_ros /home/$USER/ros/src/rplidar_ros
 COPY ./sllidar_ros2 /home/$USER/ros/src/sllidar_ros2
+COPY ./ydlidar_ros2_driver /home/$USER/ros/src/ydlidar_ros2_driver
 COPY ./iot_cyclone_dds_profile.xml /home/$USER/
 ENV CYCLONEDDS_URI=/home/$USER/iot_cyclone_dds_profile.xml
 WORKDIR /home/$USER/ros
