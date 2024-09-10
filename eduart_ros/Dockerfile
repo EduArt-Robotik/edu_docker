@@ -1,9 +1,9 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 # using bash
 SHELL ["/bin/bash", "-c"]
-ENV UBUNTU_DISTRO jammy
-ENV ROS_DISTRO humble
+ENV UBUNTU_DISTRO noble
+ENV ROS_DISTRO jazzy
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -27,13 +27,14 @@ RUN \
 # Install ROS
 ## Get package archive key and ROS source list entry.
     && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $UBUNTU_DISTRO main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
     && apt-get update \
 ########################################################
 # Install ROS packages
     && apt-get install -q -y --no-install-recommends \
     python3-colcon-common-extensions \
     software-properties-common \
+    ros-dev-tools \
     ros-$ROS_DISTRO-ros-base \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
     ros-$ROS_DISTRO-fastrtps \
