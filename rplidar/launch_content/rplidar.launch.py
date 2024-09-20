@@ -13,7 +13,7 @@ def generate_launch_description():
     rplidar_node = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([
         PathJoinSubstitution([
-          FindPackageShare('rplidar_ros'),
+          './',
           'launch',
           'rplidar_a2m8_launch.py'
         ])
