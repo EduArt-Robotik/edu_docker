@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-ros-base:humble-1.2.0
+FROM eduartrobotik/eduart-ros-base:humble-1.2.2
 
 ENV ROS_DISTRO humble
 ENV USER user
