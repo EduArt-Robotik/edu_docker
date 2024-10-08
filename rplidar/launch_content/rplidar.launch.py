@@ -34,7 +34,24 @@ def generate_launch_description():
         PathJoinSubstitution([robot_namespace, 'laser'])
       ]
     )
+
+    laser_filter = Node(
+      package="laser_filters",
+      executable="scan_to_scan_filter_chain",
+      namespace=robot_namespace,
+      parameters=[
+        PathJoinSubstitution([
+          "./",
+          "laser_angle_filter.yaml",
+        ]),
+      ],
+      remappings=[
+        ('scan', 'scan/raw'),
+        ('scan_filtered', 'scan')
+      ],   
+    )
     return LaunchDescription([
         rplidar_node,
-        tf_laser
+        tf_laser,
+        laser_filter
     ])

@@ -71,6 +71,9 @@ def generate_launch_description():
                          'inverted': inverted,
                          'angle_compensate': angle_compensate,
                          'scan_mode': scan_mode}],
+            remappings=[
+              ('scan', 'scan/raw')
+            ],                         
             output='screen'),
     ])
 
