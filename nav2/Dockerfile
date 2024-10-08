@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-swarm:0.2.1
+FROM eduartrobotik/eduart-ros-base:humble-1.2.2
 
 ENV ROS_DISTRO humble
 ENV USER user
@@ -19,7 +19,7 @@ USER $USER
 
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/
-RUN sudo chmod a+x /home/$USER/entrypoint
+RUN chmod a+x /home/$USER/entrypoint
 ENTRYPOINT [ "/home/user/entrypoint" ]
 
 # launch rplidar node
