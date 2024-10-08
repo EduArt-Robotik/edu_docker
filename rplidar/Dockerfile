@@ -4,6 +4,14 @@ ENV ROS_DISTRO humble
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
+# install laser filters
+USER root
+RUN \
+    apt-get update \
+    && apt-get install -q -y --no-install-recommends \
+    ros-$ROS_DISTRO-laser-filters
+
+
 USER $USER
 
 # set up ros workspace

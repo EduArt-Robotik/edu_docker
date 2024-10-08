@@ -1,4 +1,4 @@
-image_name = rpliadr:1.2.0
+image_name = rpliadr:1.3.0
 
 download-sources:
 	git clone --branch ros2 https://github.com/Slamtec/rplidar_ros.git
