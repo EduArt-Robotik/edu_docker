@@ -1,4 +1,4 @@
-image_name = eduart-ros-base:jazzy-1.0.0
+image_name = eduart-ros-base:jazzy-1.0.1
 
 build-docker:
 	docker build -t $(image_name) .
