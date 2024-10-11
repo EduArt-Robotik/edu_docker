@@ -11,4 +11,4 @@ build-multiarch-and-push:
 clean:
 	rm -rf rplidar_ros
 	rm -rf sllidar_ros2
-  rm -rf sick_lidar_localization
+	rm -rf sick_lidar_localization

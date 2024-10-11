@@ -1,6 +1,6 @@
-FROM eduartrobotik/eduart-ros-base:humble-1.2.2
+FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
 
-ENV ROS_DISTRO humble
+ENV ROS_DISTRO jazzy
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -10,7 +10,7 @@ RUN \
     apt-get update \
     && apt-get install -q -y --no-install-recommends \
       ros-$ROS_DISTRO-laser-filters \
-      libcurl-dev \
+      libcurl4-openssl-dev \
       libjsoncpp-dev
 
 
