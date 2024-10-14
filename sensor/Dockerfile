@@ -33,7 +33,3 @@ RUN source /opt/ros/$ROS_DISTRO/setup.bash \
 COPY --chown=$USER ./entrypoint /home/$USER/
 RUN chmod a+x /home/$USER/entrypoint
 ENTRYPOINT [ "/home/user/entrypoint" ]
-
-# launch rplidar node
-CMD echo "launching rplidar control software" \
-    && ros2 launch rplidar_ros rplidar.launch.py
