@@ -18,7 +18,7 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch launch_sick_pico.launch.py && ros2 run sick_lidar_localization sick_lidar_localization ./src/sick_lidar_localization/launch/sick_lidar_localization.launch'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch launch_sick_pico.launch.py && ros2 run sick_lidar_localization sick_lidar_localization /home/user/ros/src/sick_lidar_localization/launch/sick_lidar_localization.launch'
         # command: tail -F anything
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'
