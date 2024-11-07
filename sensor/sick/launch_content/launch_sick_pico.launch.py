@@ -30,7 +30,7 @@ def generate_launch_description():
     }.items()
   )
 
-  transform_laser = Node(
+  transform_laser_point_cloud = Node(
     package='tf2_ros',
     executable='static_transform_publisher',
     arguments=[
@@ -39,10 +39,20 @@ def generate_launch_description():
       'world'
     ]
   )
+  transform_laser = Node(
+    package='tf2_ros',
+    executable='static_transform_publisher',
+    arguments=[
+      '0.12', '0.0', '0.12', '0.0', '0', '0',
+      PathJoinSubstitution([edu_robot_namespace, 'base_link']),
+      PathJoinSubstitution([edu_robot_namespace, 'laser_1'])
+    ]
+  )  
 
   return LaunchDescription([
     edu_robot_namespace_arg,
-    sick_scan,
-    transform_laser
+    # sick_scan,
+    transform_laser,
+    transform_laser_point_cloud
   ])
   
