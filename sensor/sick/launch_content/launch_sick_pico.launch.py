@@ -19,17 +19,30 @@ def generate_launch_description():
   sick_scan_launch_file = PathJoinSubstitution([
     FindPackageShare('sick_scan_xd'),
     'launch',
-    'sick_tim_7xx.launch.py'
+    'sick_picoscan.launch.py'
   ])
   sick_scan = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(sick_scan_launch_file),
     launch_arguments={
       'hostname': '192.168.0.70',
+      'udp_receiver_ip': '192.168.0.100',
+      'publish_frame_id': edu_robot_namespace + '/laser'
     }.items()
+  )
+
+  transform_laser = Node(
+    package='tf2_ros',
+    executable='static_transform_publisher',
+    arguments=[
+      '0.12', '0.0', '0.12', '0.0', '0', '0',
+      PathJoinSubstitution([edu_robot_namespace, 'base_link']),
+      'world'
+    ]
   )
 
   return LaunchDescription([
     edu_robot_namespace_arg,
-    sick_scan
+    sick_scan,
+    transform_laser
   ])
   
