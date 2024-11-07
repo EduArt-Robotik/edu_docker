@@ -16,19 +16,19 @@ def generate_launch_description():
   )
 
   # Launching needed processes for localization
-  sick_scan_launch_file = PathJoinSubstitution([
-    FindPackageShare('sick_scan_xd'),
-    'launch',
-    'sick_picoscan.launch.py'
-  ])
-  sick_scan = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(sick_scan_launch_file),
-    launch_arguments={
-      'hostname': '192.168.0.70',
-      'udp_receiver_ip': '192.168.0.100',
-      'publish_frame_id': edu_robot_namespace + '/laser'
-    }.items()
-  )
+  # sick_scan_launch_file = PathJoinSubstitution([
+  #   FindPackageShare('sick_scan_xd'),
+  #   'launch',
+  #   'sick_picoscan.launch.py'
+  # ])
+  # sick_scan = IncludeLaunchDescription(
+  #   PythonLaunchDescriptionSource(sick_scan_launch_file),
+  #   launch_arguments={
+  #     'hostname': '192.168.0.70',
+  #     'udp_receiver_ip': '192.168.0.100',
+  #     'publish_frame_id': edu_robot_namespace + '/laser'
+  #   }.items()
+  # )
 
   transform_laser_point_cloud = Node(
     package='tf2_ros',
