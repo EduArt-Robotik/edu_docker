@@ -54,7 +54,7 @@ RUN cd /home/$USER/ros/src/ \
     && source /home/$USER/.bashrc \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-    WORKDIR /home/$USER/ros
+WORKDIR /home/$USER/ros
 
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/

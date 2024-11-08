@@ -1,0 +1,25 @@
+version: "3.0"
+
+services:
+    sick-localization:
+        image: eduartrobotik/sensor:1.0.0
+        container_name: eduart-sensor-leuze-1.0.0
+        user: root
+        restart: always
+        privileged: true
+        ipc: host
+        pid: host
+        mem_limit: 300mb
+        environment:
+            - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
+            - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
+        network_mode: "host"
+        devices:
+            - '/dev:/dev'
+        group_add:
+            - dialout
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch transform.launch.py & ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.0.70 port:=9990 topic:=${EDU_ROBOT_NAMESPACE}/scan'
+        # command: bash -c 'cd /home/user/ros/launch_content; ros2 launch launch_sick_pico.launch.py & ros2 run sick_lidar_localization sick_lidar_localization ./sick_lidar_localization.launch'
+        # command: tail -F anything
+        volumes:
+            - './launch_content:/home/user/ros/launch_content:r'
