@@ -18,7 +18,7 @@ git clone https://github.com/EduArt-Robotik/edu_docker.git
 First, the udev rules must be installed. This is required for access to the RPLidar device. Navigate into the rplidar folder and install rules by:
 
 ```bash
-cd ~/edu_docker/rplidar
+cd ~/edu_docker/sensor/rplidar
 sudo make install-udev-rules
 ```
 
@@ -37,7 +37,7 @@ The provided launch file is configured to use an RPLidar A2M8. If you want to us
 In the folder **launch_content** the launch file **rplidar.lauch.py** is located. Navigate to and open it by:
 
 ```bash
-cd ~/edu_docker/rplidar/launch_content
+cd ~/edu_docker/sensor/rplidar/launch_content
 nano rplidar.launch.py
 ```
 
@@ -82,7 +82,7 @@ Please be aware of the used baudrate (switch on the side of the connection box).
 After the launch file was adapted (or not) the software could be launched using following command:
 
 ```bash
-cd ~/edu_docker/rplidar
+cd ~/edu_docker/sensor/rplidar
 docker compose up
 ```
 
@@ -93,7 +93,7 @@ The docker image can updated by following commands:
 >**Note**: your adapted launch file will be kept. If your running in same problems with git please contact the EduArt support.
 
 ```bash
-cd ~/edu_docker/rplidar
+cd ~/edu_docker/sensor/rplidar
 git fetch origin
 git stash
 git pull --ff
