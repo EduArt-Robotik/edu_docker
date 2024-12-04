@@ -2,6 +2,6 @@
 
 Provides Dockerfiles for all EduArt's robots including deployment and launch scripts.
 
-## RP Lidar
+## Sensors
 
-Please see [here](rplidar/README.md) for details.
+Please see [here](sensor/README.md) for details.
