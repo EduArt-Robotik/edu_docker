@@ -1,6 +1,6 @@
-FROM eduartrobotik/eduart-ros-base:humble-1.2.2
+FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
 
-ENV ROS_DISTRO humble
+ENV ROS_DISTRO jazzy
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
