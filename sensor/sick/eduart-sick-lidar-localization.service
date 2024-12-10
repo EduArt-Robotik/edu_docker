@@ -1,0 +1,16 @@
+[Unit]
+Description=Service for controlling Sick line navigation.
+PartOf=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# first stop and remove already running container
+ExecStartPre=/bin/docker compose -f /home/user/edu_docker/sensor/sick/docker-compose.yaml down
+# start container
+ExecStart=/bin/docker compose -f /home/user/edu_docker/sensor/sick/docker-compose.yaml up -d
+ExecStop=/bin/docker compose -f /home/user/edu_docker/sensor/sick/docker-compose.yaml down
+
+[Install]
+WantedBy=multi-user.target
