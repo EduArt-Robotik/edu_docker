@@ -111,5 +111,7 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_slam_params_file_cmd)
     ld.add_action(start_sync_slam_toolbox_node)
+    ld.add_action(configure_event)
+    ld.add_action(activate_event)
  
     return ld
