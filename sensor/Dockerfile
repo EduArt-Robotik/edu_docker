@@ -1,7 +1,7 @@
 FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
 
-ENV ROS_DISTRO jazzy
-ENV USER user
+ENV ROS_DISTRO=jazzy
+ENV USER=user
 ENV DEBIAN_FRONTEND=noninteractive
 
 # install laser filters
@@ -20,6 +20,7 @@ USER $USER
 
 # set up ros workspace
 RUN mkdir -p /home/$USER/ros/src/
+RUN mkdir -p /home/$USER/driver/
 
 # rplidar
 RUN cd /home/$USER/ros/src/ \
@@ -49,6 +50,24 @@ RUN cd /home/$USER/ros/src/ \
 # leuze lidar
 RUN cd /home/$USER/ros/src/ \
     && git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git \
+    && cd .. \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && source /home/$USER/.bashrc \
+    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+# ydlidar sdk for t-mini pro
+RUN cd /home/$USER/driver/ \
+    && git clone https://github.com/YDLIDAR/YDLidar-SDK.git \
+    && cd YDLidar-SDK/ \
+    && mkdir build \
+    && cd build/ \
+    && cmake .. \
+    && make -j$(($(nproc)-1)) \
+    && sudo make install
+
+RUN cd /home/$USER/ros/src/ \
+    # && git clone https://github.com/EduArt-Robotik/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver \
+    && git clone --branch humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver \
     && cd .. \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/$USER/.bashrc \

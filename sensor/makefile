@@ -1,4 +1,4 @@
-image_name = sensor:1.0.0
+image_name = sensor:1.0.1
 
 download-sources:
 	git clone --branch ros2 https://github.com/Slamtec/rplidar_ros.git
