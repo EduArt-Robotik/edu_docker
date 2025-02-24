@@ -16,6 +16,6 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch ydlidar_launch.py'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch ydlidar_launch.py params_file:="./TminiPro.yaml"'
         volumes:
             - './launch_content:/home/user/ros/launch_content:ro'
