@@ -1,11 +1,5 @@
 image_name = sensor:1.0.1
 
-download-sources:
-	git clone --branch ros2 https://github.com/Slamtec/rplidar_ros.git
-	git clone --branch main https://github.com/Slamtec/sllidar_ros2.git
-	git clone --branch master https://github.com/SICKAG/sick_lidar_localization.git
-	git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git
-
 build-multiarch-and-push:
 	docker buildx build --platform linux/amd64,linux/arm64/v8 -t eduartrobotik/$(image_name) --push .
 
