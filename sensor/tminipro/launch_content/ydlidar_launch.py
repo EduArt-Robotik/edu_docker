@@ -35,11 +35,7 @@ def generate_launch_description():
                                             # {"port": "/dev/tminipro"},        # Symlink doesn't work, uses default instead (/dev/ttyUSB0) 
                                             {"frame_id": PathJoinSubstitution([edu_robot_namespace, 'laser'])}
                                             ],
-                                namespace='/',
-                                remappings=[
-                                    ('/scan', PathJoinSubstitution([edu_robot_namespace, 'scan'])),
-                                    ('/point_cloud', PathJoinSubstitution([edu_robot_namespace, 'point_cloud']))
-                                ]
+                                namespace=edu_robot_namespace
                                 )
     tf2_node = Node(package='tf2_ros',
                     executable='static_transform_publisher',
