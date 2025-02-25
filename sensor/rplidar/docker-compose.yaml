@@ -1,5 +1,3 @@
-version: "3.0"
-
 services:
     rplidar:
         image: eduartrobotik/sensor:1.0.0

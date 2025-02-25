@@ -1,14 +1,18 @@
 from launch import LaunchDescription
 
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
 
-from launch.substitutions import Command, EnvironmentVariable, PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
+import os
+
 def generate_launch_description():
-    robot_namespace = EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
+    edu_robot_namespace = LaunchConfiguration('edu_robot_namespace')
+    edu_robot_namespace_arg = DeclareLaunchArgument('edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', 'eduard'))
+
+    parameter_file = PathJoinSubstitution(["./", "laser_angle_filter.yaml",])
 
     rplidar_node = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([
@@ -20,7 +24,7 @@ def generate_launch_description():
       ]),
       launch_arguments={
         'serial_port' : '/dev/ttyUSB0', # actually it should be /dev/rplidar, but then a error code will be rise by the driver...
-        'frame_id' : PathJoinSubstitution([robot_namespace, 'laser'])
+        'frame_id' : PathJoinSubstitution([edu_robot_namespace, 'laser'])
         # 'serial_baudrate' : '115200'
       }.items()
     )
@@ -30,20 +34,18 @@ def generate_launch_description():
       executable='static_transform_publisher',
       arguments=[
         '0.11', '0.0', '0.125', '3.141592654', '0', '0',
-        PathJoinSubstitution([robot_namespace, 'base_link']),
-        PathJoinSubstitution([robot_namespace, 'laser'])
+        PathJoinSubstitution([edu_robot_namespace, 'base_link']),
+        PathJoinSubstitution([edu_robot_namespace, 'laser'])
       ]
     )
 
     laser_filter = Node(
       package="laser_filters",
       executable="scan_to_scan_filter_chain",
-      namespace=robot_namespace,
+      namespace=edu_robot_namespace,
       parameters=[
-        PathJoinSubstitution([
-          "./",
-          "laser_angle_filter.yaml",
-        ]),
+        parameter_file,
+        {"box_frame": PathJoinSubstitution([edu_robot_namespace, 'base_link'])}
       ],
       remappings=[
         ('scan', 'scan/raw'),
@@ -51,6 +53,7 @@ def generate_launch_description():
       ],   
     )
     return LaunchDescription([
+        edu_robot_namespace_arg,
         rplidar_node,
         tf_laser,
         laser_filter
