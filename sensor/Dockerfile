@@ -57,7 +57,7 @@ RUN cd /home/$USER/ros/src/ \
 
 # ydlidar sdk for t-mini pro
 RUN cd /home/$USER/driver/ \
-    && git clone https://github.com/YDLIDAR/YDLidar-SDK.git \
+    && git clone --branch V1.2.7 https://github.com/YDLIDAR/YDLidar-SDK.git \
     && cd YDLidar-SDK/ \
     && mkdir build \
     && cd build/ \
@@ -66,7 +66,6 @@ RUN cd /home/$USER/driver/ \
     && sudo make install
 
 RUN cd /home/$USER/ros/src/ \
-    # && git clone https://github.com/EduArt-Robotik/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver \
     && git clone --branch humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver \
     && cd .. \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
