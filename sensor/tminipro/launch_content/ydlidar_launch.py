@@ -22,7 +22,8 @@ def generate_launch_description():
         description='Filepath to the ROS2 parameters file to use.'
     )
 
-    driver_node = LifecycleNode(package='ydlidar_ros2_driver',
+    driver_node = LifecycleNode(
+        package='ydlidar_ros2_driver',
         executable=node_name,
         name=node_name,
         output='screen',
