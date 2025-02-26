@@ -56,15 +56,17 @@ RUN cd /home/$USER/ros/src/ \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 # ydlidar sdk for t-mini pro
-RUN cd /home/$USER/driver/ \
+USER root
+RUN cd /tmp \
     && git clone --branch V1.2.7 https://github.com/YDLIDAR/YDLidar-SDK.git \
     && cd YDLidar-SDK/ \
     && mkdir build \
     && cd build/ \
     && cmake .. \
     && make -j$(($(nproc)-1)) \
-    && sudo make install
+    && make install
 
+USER $USER
 RUN cd /home/$USER/ros/src/ \
     && git clone --branch humble https://github.com/YDLIDAR/ydlidar_ros2_driver.git ydlidar_ros2_ws/src/ydlidar_ros2_driver \
     && cd .. \
