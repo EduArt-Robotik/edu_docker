@@ -40,9 +40,14 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='static_tf_pub_laser',
         arguments=[
-            '0.11', '0.0', '0.125','3.141592654', '0.0', '0.0', # TODO: Values only copied from rplidar - must be checked!
-            PathJoinSubstitution([edu_robot_namespace, 'base_link']),
-            PathJoinSubstitution([edu_robot_namespace, 'laser'])]
+            "--x", "0.115",
+            "--y", "0.0",
+            "--z", "0.125",
+            "--roll",  "0.0",
+            "--pitch", "0.0",
+            "--yaw",  "1.570796327", 
+            "--frame-id", PathJoinSubstitution([edu_robot_namespace, 'base_link']),
+            "--child-frame-id", PathJoinSubstitution([edu_robot_namespace, 'laser'])],
     )
 
     return LaunchDescription([
