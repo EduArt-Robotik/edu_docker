@@ -20,7 +20,6 @@ USER $USER
 
 # set up ros workspace
 RUN mkdir -p /home/$USER/ros/src/
-RUN mkdir -p /home/$USER/driver/
 
 # rplidar
 RUN cd /home/$USER/ros/src/ \
