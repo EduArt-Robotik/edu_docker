@@ -1,9 +1,7 @@
-version: "3.0"
-
 services:
     nav2:
-        image: eduartrobotik/nav2:1.1.0
-        container_name: nav2-1.1.0
+        image: eduartrobotik/nav2:1.2.0
+        container_name: nav2-1.2.0
         user: user
         restart: always
         privileged: true
