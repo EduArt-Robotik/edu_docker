@@ -1,7 +1,7 @@
 services:
-    rplidar:
-        image: eduartrobotik/sensor:1.0.0
-        container_name: eduart-sensor-rpliadr-1.0.0
+    tminipro:
+        image: eduartrobotik/sensor:1.0.1
+        container_name: eduart-sensor-tminipro-1.0.0
         user: root
         restart: always
         privileged: true
@@ -16,6 +16,6 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch rplidar.launch.py'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch ydlidar_launch.py'
         volumes:
-            - './launch_content:/home/user/ros/launch_content:r'
+            - './launch_content:/home/user/ros/launch_content:ro'
