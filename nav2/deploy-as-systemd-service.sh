@@ -5,10 +5,10 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 docker_compose_file_path=$(pwd)
-systemd_service_file="iot2050-edu-rplidar.service"
+systemd_service_file="eduart-nav2.service"
 tag="<docker_compose_file_path>"
 
-echo "Deploying Docker Compose Services for Controlling RPLidar on Iot2050 Eduard"
+echo "Deploying Docker Compose Services for nav2 functionality on EduArt robots."
 
 # First installing systemd service on system.
 echo "Installing systemd service on system"
@@ -30,7 +30,7 @@ systemctl enable $systemd_service_file
 echo "Systemd service was installed and enabled, so it will start automatically at boot up."
 
 # Printing info text.
-echo "With following commands you can control the Iot2050 systemd service:"
+echo "With following commands you can control the EduArt nav2 systemd service:"
 echo "starting:           sudo systemctl start $systemd_service_file"
 echo "stopping:           sudo systemctl stop $systemd_service_file"
 echo "enable autostart:   sudo systemctl enable $systemd_service_file"
