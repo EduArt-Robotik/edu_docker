@@ -142,10 +142,6 @@ def generate_launch_description():
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
-                # parameters= [{'yaml_filename': "test.yaml"},
-                #             {"topic_name": "eduard/orange/map"},
-                #             {"frame_id": "eduard/orange/map"}
-                #             ],                           
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings,
