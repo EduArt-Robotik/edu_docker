@@ -70,7 +70,7 @@ def generate_launch_description():
         'use_respawn', default_value='False',
         description='Whether to respawn if a node crashes. Applied when composition is disabled.')
     declare_log_level_cmd = DeclareLaunchArgument(
-        'log_level', default_value='debug',
+        'log_level', default_value='info',
         description='log level')
     
     # Nodes Managed by the NAV2 Lifecyclemanager
@@ -92,9 +92,10 @@ def generate_launch_description():
         'odom_frame': tf_prefix + 'odom',
         'scan_topic': robot_namespace + 'scan',
         'frame_id': tf_prefix + 'map',
+        'base_frame_id': tf_prefix + 'base_footprint',
         'global_frame_id': tf_prefix + 'map',
         'yaml_filename': 'warehouse_v1.yaml',
-        'map_topic': robot_namespace + 'map'
+        'odom_frame_id': tf_prefix + 'odom'
     }
  
     # RewrittenYaml returns a path to a temporary YAML file with substitutions applied
