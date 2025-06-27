@@ -30,22 +30,24 @@ def generate_launch_description():
     # If set -> use AMCL + MapServer. 
     # If not set -> use SLAM
     map_file = os.environ.get('MAP_FILE', '').strip()
-    use_amcl = len(map_file) > 0
+    use_amcl = PythonExpression(['"', map_file, '" != ""'])
+    use_slam_expr = PythonExpression(['not (', '"', map_file, '" != "")'])
  
     # Debug prints
     print('use robot namespace = ', robot_namespace)
     print('use tf prefix = ', tf_prefix)
-    print('MAP_FILE =', map_file)
+    print('provided map file =', map_file)
 
+    LogInfo(msg=f'use robot namespace = {robot_namespace}')
+    LogInfo(msg=f'use tf prefix = {tf_prefix}'),
+    LogInfo(msg=PythonExpression(['"MAP_FILE = "', map_file])),
+    
     # Create launch configurations
     namespace               = LaunchConfiguration('namespace')
     autostart               = LaunchConfiguration('autostart')
     use_lifecycle_manager   = LaunchConfiguration("use_lifecycle_manager")
     use_sim_time            = LaunchConfiguration('use_sim_time')
-    slam_params_file        = LaunchConfiguration('slam_params_file')
     use_respawn             = LaunchConfiguration('use_respawn')
-    container_name          = LaunchConfiguration('container_name')
-    container_name_full     = (namespace, '/', container_name)
     log_level               = LaunchConfiguration('log_level')
 
     # Set launch configurations
@@ -64,14 +66,12 @@ def generate_launch_description():
         'use_sim_time',
         default_value='false',
         description='Use simulation/Gazebo clock')
-    declare_slam_params_file_cmd = DeclareLaunchArgument(
-        'slam_params_file',
-        default_value=os.path.join(get_package_share_directory("slam_toolbox"),
-                                   'config', 'mapper_params_online_sync.yaml'),
-        description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
     declare_use_respawn_cmd = DeclareLaunchArgument(
         'use_respawn', default_value='False',
         description='Whether to respawn if a node crashes. Applied when composition is disabled.')
+    declare_log_level_cmd = DeclareLaunchArgument(
+        'log_level', default_value='debug',
+        description='log level')
     
     # Nodes Managed by the NAV2 Lifecyclemanager
     lifecycle_nodes = ['map_server',
@@ -90,7 +90,11 @@ def generate_launch_description():
         'autostart': autostart,
         'map_frame': tf_prefix + 'map',
         'odom_frame': tf_prefix + 'odom',
-        'scan_topic': robot_namespace + 'scan'
+        'scan_topic': robot_namespace + 'scan',
+        'frame_id': tf_prefix + 'map',
+        'global_frame_id': tf_prefix + 'map',
+        'yaml_filename': 'warehouse_v1.yaml',
+        'map_topic': robot_namespace + 'map'
     }
  
     # RewrittenYaml returns a path to a temporary YAML file with substitutions applied
@@ -102,8 +106,9 @@ def generate_launch_description():
 
     # Map_Server + AMCL
     group_amcl = GroupAction(
-        condition=IfCondition(PythonExpression([use_amcl])),
+        condition=IfCondition(use_amcl),
         actions=[
+            LogInfo(msg="Starting Nav2 Map Server & AMCL"),
             SetParameter('use_sim_time', use_sim_time),
             Node(
                 package='nav2_map_server',
@@ -142,26 +147,9 @@ def generate_launch_description():
             ),
             ]
     )
-    # SLAM Toolbox
-    group_slam = GroupAction(
-        condition=IfCondition(PythonExpression(['not ', use_amcl])),
-        actions=[
-            SetParameter('use_sim_time', use_sim_time),
-            Node(
-                package='slam_toolbox',
-                executable='sync_slam_toolbox_node',
-                name='slam_toolbox',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings,
-                namespace=namespace,
-            ),
-    ]
-    )
 
+    # SLAM Toolbox
+    
     start_sync_slam_toolbox_node = LifecycleNode(
         parameters=[
           configured_params,
@@ -201,20 +189,32 @@ def generate_launch_description():
         ),
         condition=IfCondition(AndSubstitution(autostart, NotSubstitution(use_lifecycle_manager)))
     )
+     # Group everything in one action
+    group_slam = GroupAction(
+        condition=IfCondition(use_slam_expr),
+        actions=[
+            LogInfo(msg="Starting SLAM"),
+            SetParameter('use_sim_time', use_sim_time),
+            start_sync_slam_toolbox_node,
+            configure_event,
+            activate_event
+    ]
+    )
 
+    
     ld = LaunchDescription()
     # Launch Arguments
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_lifecycle_manager)
     ld.add_action(declare_use_sim_time_argument)
-    ld.add_action(declare_slam_params_file_cmd)
     ld.add_action(declare_use_respawn_cmd)
+    ld.add_action(declare_log_level_cmd)
     
     # Nodes
-    ld.add_action(start_sync_slam_toolbox_node)
-    ld.add_action(configure_event)
-    ld.add_action(activate_event)
+    # ld.add_action(start_sync_slam_toolbox_node)
+    # ld.add_action(configure_event)
+    # ld.add_action(activate_event)
     ld.add_action(group_amcl)
     ld.add_action(group_slam)
  
