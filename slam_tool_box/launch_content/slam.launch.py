@@ -1,9 +1,9 @@
 import os
  
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, EmitEvent, LogInfo, RegisterEventHandler
-from launch.substitutions import LaunchConfiguration, EnvironmentVariable
-from launch_ros.actions import Node, LifecycleNode
+from launch.actions import DeclareLaunchArgument, EmitEvent, LogInfo, RegisterEventHandler, GroupAction
+from launch.substitutions import EnvironmentVariable, PythonExpression
+from launch_ros.actions import Node, LifecycleNode, SetParameter
 from ament_index_python.packages import get_package_share_directory
 from nav2_common.launch import RewrittenYaml
 from launch_ros.event_handlers import OnStateTransition
@@ -13,9 +13,6 @@ from launch.conditions import IfCondition
 from launch.events import matches_action
 from launch.substitutions import (AndSubstitution, LaunchConfiguration,
                                   NotSubstitution)
-from launch.actions import GroupAction, SetEnvironmentVariable
-from launch.substitutions import EqualsSubstitution, PythonExpression
-from launch_ros.actions import LoadComposableNodes, SetParameter
 
 
 def generate_launch_description():
@@ -31,16 +28,12 @@ def generate_launch_description():
     # If not set -> use SLAM
     map_file = os.environ.get('MAP_FILE', '').strip()
     use_amcl = PythonExpression(['"', map_file, '" != ""'])
-    use_slam_expr = PythonExpression(['not (', '"', map_file, '" != "")'])
+    use_slam = PythonExpression(['not (', '"', map_file, '" != "")'])
  
     # Debug prints
     print('use robot namespace = ', robot_namespace)
     print('use tf prefix = ', tf_prefix)
     print('provided map file =', map_file)
-
-    LogInfo(msg=f'use robot namespace = {robot_namespace}')
-    LogInfo(msg=f'use tf prefix = {tf_prefix}'),
-    LogInfo(msg=PythonExpression(['"MAP_FILE = "', map_file])),
     
     # Create launch configurations
     namespace               = LaunchConfiguration('namespace')
@@ -150,7 +143,7 @@ def generate_launch_description():
     )
 
     # SLAM Toolbox
-    
+     # creates SLAM Toolbox node
     start_sync_slam_toolbox_node = LifecycleNode(
         parameters=[
           configured_params,
@@ -166,7 +159,7 @@ def generate_launch_description():
         remappings=[('/map', robot_namespace + 'map')],
         output='screen'
       )
- 
+     # Adds configure event
     configure_event = EmitEvent(
         event=ChangeState(
             lifecycle_node_matcher=matches_action(start_sync_slam_toolbox_node),
@@ -174,7 +167,7 @@ def generate_launch_description():
         ),
         condition=IfCondition(AndSubstitution(autostart, NotSubstitution(use_lifecycle_manager)))
     )
-
+     # Adds activation event
     activate_event = RegisterEventHandler(
         OnStateTransition(
             target_lifecycle_node=start_sync_slam_toolbox_node,
@@ -190,9 +183,9 @@ def generate_launch_description():
         ),
         condition=IfCondition(AndSubstitution(autostart, NotSubstitution(use_lifecycle_manager)))
     )
-     # Group everything in one action
+     # Group everything in one action that gets executed on launch
     group_slam = GroupAction(
-        condition=IfCondition(use_slam_expr),
+        condition=IfCondition(use_slam),
         actions=[
             LogInfo(msg="Starting SLAM"),
             SetParameter('use_sim_time', use_sim_time),
@@ -213,9 +206,6 @@ def generate_launch_description():
     ld.add_action(declare_log_level_cmd)
     
     # Nodes
-    # ld.add_action(start_sync_slam_toolbox_node)
-    # ld.add_action(configure_event)
-    # ld.add_action(activate_event)
     ld.add_action(group_amcl)
     ld.add_action(group_slam)
  
