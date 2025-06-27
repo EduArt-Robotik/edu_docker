@@ -1,6 +1,6 @@
 services:
     nav2:
-        image: eduartrobotik/nav2:1.3.0
+        image: eduartrobotik/nav2:1.2.0
         container_name: nav2-1.3.0
         user: user
         restart: always

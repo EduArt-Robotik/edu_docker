@@ -1,6 +1,6 @@
 services:
     rplidar:
-        image: eduartrobotik/nav2:1.1.0
+        image: eduartrobotik/nav2:1.2.0
         container_name: slam-tool-box-1.1.0
         user: root
         restart: always
