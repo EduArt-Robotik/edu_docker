@@ -47,9 +47,7 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
-    lifecycle_nodes = ['map_server',
-                       'amcl',
-                       'controller_server',
+    lifecycle_nodes = ['controller_server',
                        'smoother_server',
                        'planner_server',
                        'behavior_server',
@@ -72,18 +70,10 @@ def generate_launch_description():
     param_substitutions = {
         'use_sim_time': use_sim_time,
         'autostart': autostart,
-        'base_frame_id': tf_prefix + 'base_footprint',
-        'global_frame_id': tf_prefix + 'map',
-        'odom_frame_id': tf_prefix + 'odom',
-        'scan_topic': robot_namespace + 'scan',
         'global_frame': tf_prefix + 'map',
         'robot_base_frame': tf_prefix + 'base_link',
         'odom_topic': robot_namespace + 'odometry',
         'topic': robot_namespace + 'scan',
-        'frame_id': tf_prefix + 'map',
-        'global_frame_id': tf_prefix + 'map',
-        'yaml_filename': 'warehouse_v1.yaml',
-        'map_topic': robot_namespace + 'map'
     }
 
     configured_params = ParameterFile(
@@ -135,30 +125,6 @@ def generate_launch_description():
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
-            Node(
-                package='nav2_map_server',
-                executable='map_server',
-                name='map_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings,
-                namespace=namespace,
-            ),
-            Node(
-                package='nav2_amcl',
-                executable='amcl',
-                name='amcl',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings,
-                namespace=namespace,
-            ),
             Node(
                 package='nav2_controller',
                 executable='controller_server',
@@ -261,18 +227,6 @@ def generate_launch_description():
         condition=IfCondition(use_composition),
         target_container=container_name_full,
         composable_node_descriptions=[
-            ComposableNode(
-                package='nav2_map_server',
-                plugin='map_server::MapServer',
-                name='map_server',
-                parameters=[configured_params],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
-            ComposableNode(
-                package='nav2_amcl',
-                plugin='nav2_amcl::AmclNode',
-                name='amcl',
-                parameters=[configured_params],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             ComposableNode(
                 package='nav2_controller',
                 plugin='nav2_controller::ControllerServer',
