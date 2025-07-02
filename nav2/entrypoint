@@ -2,5 +2,4 @@
 
 # Setup ROS 2 environment
 source /opt/ros/jazzy/setup.bash
-source /home/user/ros/install/setup.bash
 exec "$@"

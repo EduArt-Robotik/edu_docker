@@ -1,7 +1,7 @@
 FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
 
-ENV ROS_DISTRO jazzy
-ENV USER user
+ENV ROS_DISTRO=jazzy
+ENV USER=user
 ENV DEBIAN_FRONTEND=noninteractive
 
 USER root

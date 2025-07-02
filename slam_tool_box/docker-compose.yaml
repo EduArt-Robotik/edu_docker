@@ -1,8 +1,6 @@
-version: "3.0"
-
 services:
     rplidar:
-        image: eduartrobotik/nav2:1.1.0
+        image: eduartrobotik/nav2:1.2.0
         container_name: slam-tool-box-1.1.0
         user: root
         restart: always
@@ -13,7 +11,8 @@ services:
         environment:
             - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
             - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
-            - CYCLONEDDS_URI=/home/user/ros/launch_content/cyclone_dds_profile.xml                 
+            - CYCLONEDDS_URI=/home/user/ros/launch_content/cyclone_dds_profile.xml
+            - MAP_FILE=${MAP_FILE}
         network_mode: "host"
         devices:
             - '/dev:/dev'
