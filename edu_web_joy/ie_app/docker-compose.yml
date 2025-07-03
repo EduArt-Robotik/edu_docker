@@ -12,7 +12,8 @@ services:
         pid: host
         mem_limit: 150mb
         environment:
-            - EDU_ROBOT_NAMESPACE=eduard
+            - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
+            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
         networks:
             - proxy-redirect
             # - zzz_layer2_net1
