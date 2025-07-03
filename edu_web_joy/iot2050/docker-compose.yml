@@ -12,5 +12,5 @@ services:
         mem_limit: 150mb
         environment:
             - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
-            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
         network_mode: host

@@ -11,7 +11,7 @@ services:
         environment:
             - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
             - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
-            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
         network_mode: "host"
         devices:
             - '/dev:/dev'
