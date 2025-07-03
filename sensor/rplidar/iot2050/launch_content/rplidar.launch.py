@@ -45,7 +45,7 @@ def generate_launch_description():
       namespace=edu_robot_namespace,
       parameters=[
         parameter_file,
-        {"params.box_frame": PathJoinSubstitution([edu_robot_namespace, 'base_link'])}
+        {"filter1.params.box_frame": PathJoinSubstitution([edu_robot_namespace, 'base_link'])}
       ],
       remappings=[
         ('scan', 'scan/raw'),
