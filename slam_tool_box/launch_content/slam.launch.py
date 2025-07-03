@@ -76,9 +76,9 @@ def generate_launch_description():
     # Nodes Managed by the NAV2 Lifecyclemanager
     lifecycle_nodes = ['map_server',
                        'amcl',
-                       'filter_mask_server',
-                       'costmap_filter_info_server'
                        ]
+    if filter_file != "":
+        lifecycle_nodes += ['filter_mask_server', 'costmap_filter_info_server']
 
     # Remappings
     remappings = [('/tf', '/tf'),
@@ -169,6 +169,8 @@ def generate_launch_description():
         condition=IfCondition(use_amcl),
         actions=[
             LogInfo(msg="Starting Nav2 Map Server & AMCL"),
+            LogInfo(msg="Lifecycle Nodes: "),
+            LogInfo(msg=lifecycle_nodes),
             SetParameter('use_sim_time', use_sim_time),
             Node(
                 package='nav2_map_server',
