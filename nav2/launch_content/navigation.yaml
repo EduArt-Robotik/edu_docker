@@ -168,6 +168,7 @@ local_costmap:
       resolution: 0.1
       robot_radius: 0.22
       plugins: ["voxel_layer", "inflation_layer"]
+      filters: ["keepout_filter"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
@@ -196,6 +197,10 @@ local_costmap:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
       always_send_full_costmap: True
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "costmap_filter_info"
 
 global_costmap:
   global_costmap:
@@ -209,7 +214,7 @@ global_costmap:
       resolution: 0.1
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
-#      plugins: ["static_layer", "inflation_layer"]
+      filters: ["keepout_filter"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -232,6 +237,10 @@ global_costmap:
         cost_scaling_factor: 3.0
         inflation_radius: 0.55
       always_send_full_costmap: True
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "costmap_filter_info"
 
 map_saver:
   ros__parameters:
