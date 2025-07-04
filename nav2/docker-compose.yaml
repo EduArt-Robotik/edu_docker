@@ -16,9 +16,6 @@ services:
         network_mode: "host"
         devices:
             - '/dev:/dev'
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py'
-# & ros2 launch twist_accumulator.launch.py'
-        # command: bash -c 'cd /home/user/ros/launch_content; ros2 launch twist_accumulator.launch.py'        
-        # command: tail -F anything
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch navigation.launch.py use_sim_time:=${EDU_USE_SIM_TIME:-false}'
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'

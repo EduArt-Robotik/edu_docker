@@ -29,6 +29,13 @@ def generate_launch_description():
     map_file = os.environ.get('MAP_FILE', '').strip()
     use_amcl = PythonExpression(['"', map_file, '" != ""'])
     use_slam = PythonExpression(['not (', '"', map_file, '" != "")'])
+
+    # Check if environment variable "FILTER_FILE" is set. 
+    # If set -> use Keep-out-zone filter
+    # If not set -> -
+    filter_file = os.environ.get('FILTER_FILE', '').strip()
+    use_filter = PythonExpression(['"', filter_file, '" != ""'])
+
  
     # Debug prints
     print('use robot namespace = ', robot_namespace)
@@ -68,8 +75,10 @@ def generate_launch_description():
     
     # Nodes Managed by the NAV2 Lifecyclemanager
     lifecycle_nodes = ['map_server',
-                       'amcl'
+                       'amcl',
                        ]
+    if filter_file != "":
+        lifecycle_nodes += ['filter_mask_server', 'costmap_filter_info_server']
 
     # Remappings
     remappings = [('/tf', '/tf'),
@@ -77,7 +86,7 @@ def generate_launch_description():
                   ('/map', robot_namespace + 'map')]
 
     # Create our own temporary YAML files that include substitutions
-    param_substitutions = {
+    slam_param_substitutions = {
         'base_frame': tf_prefix + 'base_footprint',
         'use_sim_time': use_sim_time,
         'autostart': autostart,
@@ -87,22 +96,81 @@ def generate_launch_description():
         'frame_id': tf_prefix + 'map',
         'base_frame_id': tf_prefix + 'base_footprint',
         'global_frame_id': tf_prefix + 'map',
-        'yaml_filename': 'warehouse_v1.yaml',
+        'yaml_filename': map_file,
         'odom_frame_id': tf_prefix + 'odom'
     }
- 
     # RewrittenYaml returns a path to a temporary YAML file with substitutions applied
-    configured_params = RewrittenYaml(
+    slam_configured_params = RewrittenYaml(
         source_file='./slam.yaml',
         root_key=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
-        param_rewrites=param_substitutions,
+        param_rewrites=slam_param_substitutions,
         convert_types=True)
+
+
+    map_amcl_param_substitutions = {
+        'base_frame_id': tf_prefix + 'base_footprint',
+        'global_frame_id': tf_prefix + 'map',
+        'odom_frame_id': tf_prefix + 'odom',
+        'frame_id': tf_prefix + 'map',
+        'yaml_filename': map_file
+
+        
+    }
+    map_amcl_configured_params = RewrittenYaml(
+        source_file='./nav2_map_amcl.yaml',
+        root_key=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
+        param_rewrites=map_amcl_param_substitutions,
+        convert_types=True)
+    
+    filtermask_param_substitutions = {
+        'frame_id': tf_prefix + 'map',
+        'yaml_filename': filter_file
+    }
+    filtermask_configured_params = RewrittenYaml(
+        source_file='./nav2_filtermask.yaml',
+        root_key=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
+        param_rewrites=filtermask_param_substitutions,
+        convert_types=True)
+ 
+
+    group_filter = GroupAction(
+        condition=IfCondition(use_filter),
+        actions=[
+            LogInfo(msg="Using Nav2 Keep-Out Filter"),
+            Node(
+                package='nav2_map_server',
+                executable='map_server',
+                name='filter_mask_server',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[filtermask_configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings,
+                namespace=namespace,
+            ),
+            Node(
+                package='nav2_map_server',
+                executable='costmap_filter_info_server',
+                name='costmap_filter_info_server',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[filtermask_configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings,
+                namespace=namespace,
+            ),
+        ]
+    )
 
     # Map_Server + AMCL
     group_amcl = GroupAction(
         condition=IfCondition(use_amcl),
         actions=[
             LogInfo(msg="Starting Nav2 Map Server & AMCL"),
+            LogInfo(msg="Lifecycle Nodes: "),
+            LogInfo(msg=lifecycle_nodes),
             SetParameter('use_sim_time', use_sim_time),
             Node(
                 package='nav2_map_server',
@@ -111,7 +179,7 @@ def generate_launch_description():
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
-                parameters=[configured_params],
+                parameters=[map_amcl_configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings,
                 namespace=namespace,
@@ -123,7 +191,7 @@ def generate_launch_description():
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
-                parameters=[configured_params],
+                parameters=[map_amcl_configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings,
                 namespace=namespace,
@@ -139,14 +207,16 @@ def generate_launch_description():
                             {'node_names': lifecycle_nodes}],
                 namespace=namespace
             ),
-            ]
+            # Also start Filter-group (Keep-Out-Zones)
+            group_filter
+        ]
     )
 
     # SLAM Toolbox
      # creates SLAM Toolbox node
     start_sync_slam_toolbox_node = LifecycleNode(
         parameters=[
-          configured_params,
+          slam_configured_params,
           {
             'use_sim_time': use_sim_time,
             'use_lifecycle_manager': use_lifecycle_manager,
