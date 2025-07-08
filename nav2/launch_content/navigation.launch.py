@@ -27,13 +27,12 @@ from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    # Get the launch directory
-    bringup_dir = get_package_share_directory('nav2_bringup')
+    # Get Robot Namespace
     robot_namespace = os.environ['EDU_ROBOT_NAMESPACE']
-    if len(robot_namespace) == 0: robot_namespace = '/eduard/'
-    if robot_namespace[0] != '/': robot_namespace = '/' + robot_namespace
-    if robot_namespace[len(robot_namespace) - 1] != '/': robot_namespace += '/'
-    tf_prefix = robot_namespace[1:] if robot_namespace[0] == '/' else robot_namespace
+    if len(robot_namespace) == 0: robot_namespace = '/eduard/'                          # default value
+    if robot_namespace[0] != '/': robot_namespace = '/' + robot_namespace               # ensure preceding "/"
+    if robot_namespace[len(robot_namespace) - 1] != '/': robot_namespace += '/'         # ensure trailing "/"
+    tf_prefix = robot_namespace[1:] if robot_namespace[0] == '/' else robot_namespace   # removes preceding "/" for tf_prefix
 
     print('use robot namespace = ', robot_namespace)
     print('use tf prefix = ', tf_prefix)
@@ -71,14 +70,11 @@ def generate_launch_description():
     param_substitutions = {
         'use_sim_time': use_sim_time,
         'autostart': autostart,
-        'base_frame_id': tf_prefix + 'base_footprint',
-        'global_frame_id': tf_prefix + 'map',
-        'odom_frame_id': tf_prefix + 'odom',
-        'scan_topic': robot_namespace + 'scan',
         'global_frame': tf_prefix + 'map',
         'robot_base_frame': tf_prefix + 'base_link',
         'odom_topic': robot_namespace + 'odometry',
-        'topic': robot_namespace + 'scan'
+        'topic': robot_namespace + 'scan',
+        'filter_info_topic': robot_namespace + 'costmap_filter_info'
     }
 
     configured_params = ParameterFile(
