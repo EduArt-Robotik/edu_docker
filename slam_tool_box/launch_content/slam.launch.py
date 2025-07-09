@@ -17,7 +17,7 @@ from launch.substitutions import (AndSubstitution, LaunchConfiguration,
 
 def generate_launch_description():
     # Get Robot Namespace
-    robot_namespace = os.environ['EDU_ROBOT_NAMESPACE']
+    robot_namespace = os.environ.get('EDU_ROBOT_NAMESPACE', 'eduard')
     if len(robot_namespace) == 0: robot_namespace = '/eduard/'                          # default value
     if robot_namespace[0] != '/': robot_namespace = '/' + robot_namespace               # ensure preceding "/"
     if robot_namespace[len(robot_namespace) - 1] != '/': robot_namespace += '/'         # ensure trailing "/"
