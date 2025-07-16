@@ -18,6 +18,6 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch rplidar.launch.py serial_port:=/dev/ttyUSB0 & ros2 launch rplidar.launch.py serial_port:=/dev/ttyUSB1'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch rplidar.launch.py serial_port:=/dev/ttyUSB0 & ros2 launch rplidar.launch.py serial_port:=/dev/ttyUSB1 & ros2 launch filter.launch.py'
         volumes:
             - './launch_content:/home/user/ros/launch_content:r'
