@@ -12,6 +12,9 @@ def generate_launch_description():
     edu_robot_namespace = LaunchConfiguration('edu_robot_namespace')
     edu_robot_namespace_arg = DeclareLaunchArgument('edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', 'eduard'))
 
+    serial_port = LaunchConfiguration('serial_port')
+    serial_port_arg = DeclareLaunchArgument('serial_port', '/dev/ttyUSB0')
+
     parameter_file = PathJoinSubstitution(["./", "laser_angle_filter.yaml",])
 
     rplidar_node = IncludeLaunchDescription(
@@ -23,7 +26,7 @@ def generate_launch_description():
         ])
       ]),
       launch_arguments={
-        'serial_port' : '/dev/ttyUSB0', # actually it should be /dev/rplidar, but then a error code will be rise by the driver...
+        'serial_port' : serial_port, # actually it should be /dev/rplidar, but then a error code will be rise by the driver...
         'frame_id' : PathJoinSubstitution([edu_robot_namespace, 'laser'])
         # 'serial_baudrate' : '115200'
       }.items()
