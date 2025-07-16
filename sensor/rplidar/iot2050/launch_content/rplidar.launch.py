@@ -13,7 +13,7 @@ def generate_launch_description():
     edu_robot_namespace_arg = DeclareLaunchArgument('edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', 'eduard'))
 
     serial_port = LaunchConfiguration('serial_port')
-    serial_port_arg = DeclareLaunchArgument('serial_port', '/dev/ttyUSB0')
+    serial_port_arg = DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB0')
 
     rplidar_node = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([
