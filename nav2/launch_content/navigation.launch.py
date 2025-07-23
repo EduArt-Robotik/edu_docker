@@ -127,7 +127,7 @@ def generate_launch_description():
         description='log level')
     
     declare_use_keepout_cmd = DeclareLaunchArgument(
-        'use_keepout', default_value='True',
+        'use_keepout', default_value='False',
         description='use_keepout')
 
     load_nodes = GroupAction(
