@@ -74,7 +74,9 @@ def generate_launch_description():
         'robot_base_frame': tf_prefix + 'base_link',
         'odom_topic': robot_namespace + 'odometry',
         'topic': robot_namespace + 'scan',
-        'filter_info_topic': robot_namespace + 'costmap_filter_info'
+        'filter_info_topic': robot_namespace + 'costmap_filter_info',
+        'local_costmap.local_costmap.ros__parameters.keepout_filter.enabled': 'false',
+        'global_costmap.global_costmap.ros__parameters.keepout_filter.enabled': 'false'
     }
 
     configured_params = ParameterFile(
