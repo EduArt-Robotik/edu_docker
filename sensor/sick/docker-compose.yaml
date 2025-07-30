@@ -19,7 +19,7 @@ services:
             - '/dev:/dev'
         group_add:
             - dialout
-        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch sick_scan_xd sick_picoscan.launch.py hostname:="192.168.0.70" udp_receiver_ip:=192.168.0.100 publish_frame_id:=${EDU_ROBOT_NAMESPACE}/laser & ros2 run sick_lidar_localization sick_lidar_localization ./sick_lidar_localization.launch & ros2 launch launch_sick_pico.launch.py'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch sick_scan_xd sick_picoscan.launch.py hostname:="192.168.0.70" udp_receiver_ip:=192.168.0.100 publish_frame_id:=${EDU_ROBOT_NAMESPACE}/laser publish_laserscan_fullframe_topic:=${EDU_ROBOT_NAMESPACE}/scan & ros2 run sick_lidar_localization sick_lidar_localization ./sick_lidar_localization.launch & ros2 launch launch_sick_pico.launch.py'
         # command: bash -c 'cd /home/user/ros/launch_content; ros2 launch launch_sick_pico.launch.py & ros2 run sick_lidar_localization sick_lidar_localization ./sick_lidar_localization.launch'
         # command: tail -F anything
         volumes:
