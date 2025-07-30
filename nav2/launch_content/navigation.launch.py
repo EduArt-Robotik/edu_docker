@@ -46,6 +46,7 @@ def generate_launch_description():
     container_name_full = (namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
+    use_keepout = LaunchConfiguration('use_keepout')
 
     lifecycle_nodes = ['controller_server',
                        'smoother_server',
@@ -74,7 +75,9 @@ def generate_launch_description():
         'robot_base_frame': tf_prefix + 'base_link',
         'odom_topic': robot_namespace + 'odometry',
         'topic': robot_namespace + 'scan',
-        'filter_info_topic': robot_namespace + 'costmap_filter_info'
+        'filter_info_topic': robot_namespace + 'costmap_filter_info',
+        'local_costmap.local_costmap.ros__parameters.keepout_filter.enabled': use_keepout,
+        'global_costmap.global_costmap.ros__parameters.keepout_filter.enabled': use_keepout
     }
 
     configured_params = ParameterFile(
@@ -122,6 +125,10 @@ def generate_launch_description():
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
         description='log level')
+    
+    declare_use_keepout_cmd = DeclareLaunchArgument(
+        'use_keepout', default_value='False',
+        description='use_keepout')
 
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
@@ -296,6 +303,7 @@ def generate_launch_description():
     ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
+    ld.add_action(declare_use_keepout_cmd)
     # Add the actions to launch all of the navigation nodes
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)
