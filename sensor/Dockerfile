@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
+FROM eduartrobotik/eduart-ros-base:jazzy-1.2.1
 
 ENV ROS_DISTRO=jazzy
 ENV USER=user
