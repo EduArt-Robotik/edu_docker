@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-ros-base:jazzy-1.0.1
+FROM eduartrobotik/eduart-ros-base:jazzy-1.2.1
 
 ENV ROS_DISTRO=jazzy
 ENV USER=user
@@ -40,8 +40,9 @@ RUN cd /home/$USER/ros/src/ \
 
 # sick localization
 RUN cd /home/$USER/ros/src/ \
-    && git clone --branch master https://github.com/SICKAG/sick_lidar_localization.git \
-    && cp sick_lidar_localization/package_ros2.xml sick_lidar_localization/package.xml \
+    && git clone --branch v6.0.0 https://github.com/SICKAG/sick_lidar_localization.git \
+    && cp -f sick_lidar_localization/sick_lidar_localization_driver/package_ros2.xml sick_lidar_localization/sick_lidar_localization_driver/package.xml \
+    && cp -f sick_lidar_localization/sick_lidar_localization_msgs/package_ros2.xml sick_lidar_localization/sick_lidar_localization_msgs/package.xml \
     && cd .. \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/$USER/.bashrc \
