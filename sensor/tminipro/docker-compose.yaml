@@ -1,7 +1,7 @@
 services:
     tminipro:
-        image: eduartrobotik/sensor:1.0.1
-        container_name: eduart-sensor-tminipro-1.0.0
+        image: eduartrobotik/sensor:1.1.0
+        container_name: eduart-sensor-tminipro-1.1.0
         user: root
         restart: always
         privileged: true
