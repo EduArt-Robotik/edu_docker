@@ -75,6 +75,18 @@ RUN cd /home/$USER/ros/src/ \
     && source /home/$USER/.bashrc \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
+RUN cd /home/$USER/ros/src/ \
+    && git clone https://gitlab.com/accerion/accerion-ros2.git \ 
+    && cd accerion-ros2 \
+    && sudo apt-get update \
+    && git submodule update --init --recursive \
+    && sudo rosdep init && rosdep update \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && rosdep install -y -i --from-paths $(colcon list --paths-only) \
+    && cd /home/$USER/ros \
+    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+
 WORKDIR /home/$USER/ros
 
 # add entry point
