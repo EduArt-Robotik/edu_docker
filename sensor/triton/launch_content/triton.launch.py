@@ -40,7 +40,10 @@ def generate_launch_description():
       'global_parent_frame': PathJoinSubstitution([edu_robot_namespace, 'map']),
       'local_parent_frame': PathJoinSubstitution([edu_robot_namespace, 'odom']),
       'local_ip': triton_ip
-    }]
+    }],
+    remappings=[
+      ('ext_ref', 'localization/pose')
+    ]
   )
 
   return LaunchDescription([
