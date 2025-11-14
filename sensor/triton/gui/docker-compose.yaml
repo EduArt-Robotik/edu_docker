@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+    accerion_control_center:
+        build:
+          dockerfile: ./Dockerfile
+          context: .
+        container_name: accerion-control-center-0.1.0
+        user: root
+        restart: always
+        privileged: true
+        ipc: host
+        pid: host
+        network_mode: "host"
