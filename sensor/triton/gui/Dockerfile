@@ -1,4 +1,4 @@
-FROM eduart-vnc-ros:0.1.0
+FROM ubuntu:jammy
 
 # using bash
 SHELL ["/bin/bash", "-c"]
@@ -7,15 +7,19 @@ ENV ROS_DISTRO=jazzy
 ENV USER=user
 ENV DEBIAN_FRONTEND=noninteractive
 
+USER root
 RUN \
     apt update \
-    && apt install qt6-base-dev -y
+    && apt install -y \
+        qt6-base-dev
 
 COPY ./AccerionControlCenter_7.1.1.3.0_amd64_22_04.deb /tmp/
 
 RUN \
     cd /tmp/ \
     && apt install ./AccerionControlCenter_7.1.1.3.0_amd64_22_04.deb -y
+
+USER ${USER}
 
 # Alternatively, to run Accerion Control Center via supervisord
 # RUN echo "[program:accerion_control_center] \n\
