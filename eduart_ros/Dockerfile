@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 USER root
 RUN echo "installing ros jazzy" \
     && apt-get update \
+    && apt-get -y upgrade \
     && apt-get install -q -y --no-install-recommends \
         apt-utils \
         software-properties-common \
@@ -40,8 +41,9 @@ RUN echo "installing ros jazzy" \
     ros-dev-tools \
     ros-$ROS_DISTRO-ros-base \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    ros-$ROS_DISTRO-fastrtps \
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+    ros-$ROS_DISTRO-rmw-zenoh-cpp \
+    ros-$ROS_DISTRO-fastrtps \
     ros-$ROS_DISTRO-joy \
     ros-$ROS_DISTRO-joy-linux \
     ros-$ROS_DISTRO-diagnostic-aggregator
