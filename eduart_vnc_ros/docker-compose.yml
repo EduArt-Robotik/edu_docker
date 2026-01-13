@@ -1,0 +1,21 @@
+services:
+  eduart-vnc-ros:
+    image: eduartrobotik/eduart-vnc-ros:0.1.0
+    container_name: eduart-vnc-ros-0.1.0
+    user: user
+    restart: always
+    privileged: true
+    ipc: host
+    pid: host
+    environment:
+      - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE:-eduard}
+      - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-rmw_cyclonedds_cpp}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+    network_mode: "host"
+# on Windows use the following line instead of network_mode "host"
+#    ports:
+#      - "8080:8080"
+#      - "5900:5900"
+    stdin_open: true
+    # command: bash -c '/usr/bin/supervisord -c /home/user/supervisor/supervisord.conf'
+    command: tail -F anything

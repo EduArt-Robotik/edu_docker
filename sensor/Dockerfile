@@ -75,6 +75,23 @@ RUN cd /home/$USER/ros/src/ \
     && source /home/$USER/.bashrc \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
+# accerion driver
+USER root
+RUN apt-get update \
+    && apt-get install -y \
+        libmagicenum-dev \
+        ros-$ROS_DISTRO-pcl-conversions
+
+USER $USER
+RUN cd /home/$USER/ros/src/ \
+    && git clone https://gitlab.com/accerion/accerion-ros2.git \ 
+    && cd accerion-ros2 \
+    && git submodule update --init --recursive \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && cd /home/$USER/ros \
+    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+
 WORKDIR /home/$USER/ros
 
 # add entry point

@@ -2,8 +2,8 @@ version: "3.0"
 
 services:
     sick-localization:
-        image: eduartrobotik/sensor:1.0.2
-        container_name: eduart-sensor-sick-localization-1.0.2
+        image: eduartrobotik/sensor:1.1.0
+        container_name: eduart-sensor-sick-localization-1.1.0
         user: root
         restart: always
         privileged: true
