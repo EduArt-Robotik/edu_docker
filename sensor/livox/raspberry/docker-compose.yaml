@@ -9,7 +9,7 @@ services:
         pid: host
         environment:
             - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
-            - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
+            - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-rmw_cyclonedds_cpp}
             - CYCLONEDDS_URI=/home/user/ros/launch_content/cyclone_dds_profile.xml
             - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
         network_mode: "host"
