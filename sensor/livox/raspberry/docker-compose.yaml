@@ -1,0 +1,20 @@
+services:
+    rplidar:
+        image: eduartrobotik/sensor:1.1.0
+        container_name: eduart-sensor-livox-1.1.0
+        user: user
+        restart: always
+        privileged: true
+        ipc: host
+        pid: host
+        environment:
+            - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE}
+            - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}
+            - CYCLONEDDS_URI=/home/user/ros/launch_content/cyclone_dds_profile.xml
+            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+        network_mode: "host"
+        devices:
+            - '/dev:/dev'
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch mid360.launch.py'
+        volumes:
+            - './launch_content:/home/user/ros/launch_content:r'
