@@ -1,0 +1,24 @@
+name: raspberry-pf-lidar
+
+services:
+    rplidar:
+        image: eduartrobotik/sensor:1.3.0
+        container_name: raspberry-pf-lidar-1.3.0
+        user: user
+        restart: always
+        privileged: true
+        ipc: host
+        pid: host
+        environment:
+            - EDU_ROBOT_NAMESPACE=${EDU_ROBOT_NAMESPACE:-eduard}
+            - RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-rmw_cyclonedds_cpp}
+            - CYCLONEDDS_URI=/home/user/ros/launch_content/cyclone_dds_profile.xml
+            - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+        network_mode: "host"
+        devices:
+            - '/dev:/dev'
+        group_add:
+            - dialout
+        command: bash -c 'cd /home/user/ros/launch_content; ros2 launch r2400.launch.py'
+        volumes:
+            - './launch_content:/home/user/ros/launch_content:r'
