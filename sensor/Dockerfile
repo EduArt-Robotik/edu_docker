@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-ros-base:jazzy-1.2.2
+FROM eduartrobotik/eduart-ros-base:jazzy-1.2.3
 
 ENV ROS_DISTRO=jazzy
 ENV USER=user
@@ -12,7 +12,6 @@ RUN \
       ros-$ROS_DISTRO-laser-filters \
       libcurl4-openssl-dev \
       libjsoncpp-dev \
-      ros-$ROS_DISTRO-sick-scan-xd \
       ros-$ROS_DISTRO-angles \
       libboost-thread-dev
 
@@ -47,6 +46,17 @@ RUN cd /home/$USER/ros/src/ \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/$USER/.bashrc \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DROS_VERSION=2 -DCMAKE_BUILD_TYPE=Release
+
+# sick lidar
+USER root
+RUN \
+    apt-get update \
+    && apt-get install -q -y --no-install-recommends \
+      ros-$ROS_DISTRO-sick-scan-xd \
+      ros-$ROS_DISTRO-sick-safetyscanners2-interfaces \
+      ros-$ROS_DISTRO-sick-safetyscanners2 \
+    && rm -rf /var/lib/apt/lists/*
+USER $USER
 
 # leuze lidar
 RUN cd /home/$USER/ros/src/ \
@@ -117,7 +127,7 @@ RUN cd /home/$USER/ros/src/ \
     && cp package_ROS2.xml package.xml \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && cd /home/$USER/ros \
-    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROS_EDITION=ROS2 -DHUMBLE_ROS=humble --packages-select livox_ros_driver2
+    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROS_EDITION==ROS2 -DDISTRO_ROS=$ROS_DISTRO --packages-select livox_ros_driver2
 
 WORKDIR /home/$USER/ros
 

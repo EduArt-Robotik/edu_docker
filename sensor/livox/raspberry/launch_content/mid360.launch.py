@@ -2,6 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, PathJoinSubstitution
 import launch
 
 ################### user configure parameters for ros2 start ###################
@@ -30,6 +31,16 @@ livox_ros2_params = [
     {"user_config_path": user_config_path},
     {"cmdline_input_bd_code": cmdline_bd_code}
 ]
+
+transform_laser_point_cloud = Node(
+  package='tf2_ros',
+  executable='static_transform_publisher',
+  arguments=[
+    '0.12', '0.0', '0.12', '1.570796327', '0', '0',
+    PathJoinSubstitution(['fluegel_mulch', 'base_link']),
+    PathJoinSubstitution(['fluegel_mulch', 'livox'])
+  ]
+)
 
 
 def generate_launch_description():

@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 # using bash
 SHELL ["/bin/bash", "-c"]
@@ -13,13 +13,13 @@ RUN \
     && apt install -y \
         qt6-base-dev
 
-COPY ./AccerionControlCenter_7.1.1.3.0_amd64_22_04.deb /tmp/
+COPY ./AccerionControlCenter_8.1.0.3.0_amd64.deb /tmp/
 
 RUN \
     cd /tmp/ \
-    && apt install ./AccerionControlCenter_7.1.1.3.0_amd64_22_04.deb -y
+    && apt install ./AccerionControlCenter_8.1.0.3.0_amd64.deb -y
 
-USER ${USER}
+#USER ${USER}
 
 # Alternatively, to run Accerion Control Center via supervisord
 # RUN echo "[program:accerion_control_center] \n\
