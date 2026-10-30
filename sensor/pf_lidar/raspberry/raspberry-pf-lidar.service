@@ -1,0 +1,27 @@
+[Unit]
+Description=Service for controlling Pepperl+Fuchs Lidar R2400.
+PartOf=ros2.online.target
+After=ros2.online.target
+
+[Service]
+# start the edu robot container and keep service alive
+EnvironmentFile=/etc/environment
+Type=simple
+
+# restart the service automatically if it crashes
+Restart=always
+RestartSec=5
+
+# first stop and remove already running container, may it still runs
+ExecStartPre=/bin/docker compose -f <docker_compose_file_path>/docker-compose.yaml down --remove-orphans
+# start container
+ExecStart=/bin/docker compose -f <docker_compose_file_path>/docker-compose.yaml up --abort-on-container-exit
+ExecStop=/bin/docker compose -f <docker_compose_file_path>/docker-compose.yaml down
+TimeoutStopSec=30
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
