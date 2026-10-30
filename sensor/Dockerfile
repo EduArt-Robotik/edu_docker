@@ -119,10 +119,17 @@ RUN cd /home/$USER/ros/src/ \
     && cd /home/$USER/ros \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROS_EDITION=ROS2 -DDISTRO_ROS=jazzy --packages-select livox_ros_driver2
 
+USER root
+RUN apt-get update \
+    && apt-get install -y \
+        libcurlpp-dev
+
+USER $USER
 RUN cd /home/$USER/ros/src/ \
     && git clone https://github.com/PepperlFuchs/pf_lidar_ros2_driver.git \
     && cd /home/$USER/ros \
-    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-select pf_lidar_ros2_driver
+    && source /opt/ros/$ROS_DISTRO/setup.bash \    
+    && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-select pf_lidar_ros2_driver pf_description pf_driver pf_interfaces
 
 WORKDIR /home/$USER/ros
 
