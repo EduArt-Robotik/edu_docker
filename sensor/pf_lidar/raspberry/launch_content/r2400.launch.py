@@ -24,6 +24,9 @@ def generate_launch_description():
     'r2400_parameter.yaml'
   ])
 
+  filter_param_file = PathJoinSubstitution(["./", "laser_filter.yaml",])
+
+
   node = Node(
     package='pf_driver',
     name='pf_r2400',
@@ -36,11 +39,25 @@ def generate_launch_description():
     namespace=edu_robot_namespace
   )
 
+  laser_filter = Node(
+    package="laser_filters",
+    executable="scan_to_scan_filter_chain",
+    namespace=edu_robot_namespace,
+    parameters=[
+      filter_param_file,
+      {"filter1.params.box_frame": PathJoinSubstitution([edu_robot_namespace, 'base_link'])}
+    ],
+    remappings=[
+      ('scan', 'scan/raw'),
+      ('scan_filtered', 'scan')
+    ],
+  )
+
   transform_laser = Node(
     package='tf2_ros',
     executable='static_transform_publisher',
     arguments=[
-      '0.12', '0.0', '0.12', '0.0', '0', '0',
+      '0.12', '0.0', '0.15', '0.0', '0', '0',
       PathJoinSubstitution([edu_robot_namespace, 'base_link']),
       PathJoinSubstitution([edu_robot_namespace, 'pf_lidar'])
     ]
@@ -48,6 +65,7 @@ def generate_launch_description():
 
   ld.add_action(edu_robot_namespace_arg)
   ld.add_action(node)
+  ld.add_action(laser_filter)
   ld.add_action(transform_laser)
 
   return ld
