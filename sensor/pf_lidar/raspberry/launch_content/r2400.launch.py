@@ -29,11 +29,25 @@ def generate_launch_description():
     name='pf_r2400',
     executable='ros_main',
     output='screen',
-    parameters=[parameter_file],
+    parameters=[
+      parameter_file,
+      {'frame_id': PathJoinSubstitution([edu_robot_namespace, 'pf_lidar'])}
+    ],
     namespace=edu_robot_namespace
   )
 
+  transform_laser = Node(
+    package='tf2_ros',
+    executable='static_transform_publisher',
+    arguments=[
+      '0.12', '0.0', '0.12', '0.0', '0', '0',
+      PathJoinSubstitution([edu_robot_namespace, 'base_link']),
+      PathJoinSubstitution([edu_robot_namespace, 'pf_lidar'])
+    ]
+  )    
+
   ld.add_action(edu_robot_namespace_arg)
   ld.add_action(node)
+  ld.add_action(transform_laser)
 
   return ld
